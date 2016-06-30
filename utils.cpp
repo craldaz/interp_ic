@@ -624,10 +624,11 @@ int Diagonalize(double* A, double* eigen, int size){
   int n_nonzero = 0;
   for (int i=0;i<size;i++)
   {
-    //printf(" eigenvalue %i: %1.5f \n",i,eigen[i]);
+//    printf(" eigenvalue %i: %1.5f \n",i,eigen[i]);
     if (abs(eigen[i])>0.0001) n_nonzero++;
   }
   //printf(" found %i independent vectors \n",n_nonzero);
+	
 
 #if DSYEVX
   for (int i=0;i<size;i++)

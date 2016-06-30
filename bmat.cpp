@@ -295,7 +295,7 @@ int ICoord::bmatp_to_U()
 
   int len_d;
   double* e = new double[len];
-//  double* U = new double[len*len];
+ double* U = new double[len*len];
   double* tmp = new double[len*N3];
   for (int i=0;i<len*N3;i++)
     tmp[i] = bmatp[i];
@@ -329,7 +329,7 @@ int ICoord::bmatp_to_U()
 //  printf(" after diagonalize \n");
 //  fflush(stdout);
 
-#if 0
+#if 1
   printf(" eigenvalues:");
   for (int i=0;i<len;i++)
     printf(" %10.8f",e[i]);
@@ -385,7 +385,7 @@ int ICoord::bmatp_to_U()
   }
 #endif
 
-#if 0
+#if 1
   //printf(" checking orthonormality of U vectors \n");
   trans(U,Ut,len,len);
   double dot;
@@ -400,7 +400,7 @@ int ICoord::bmatp_to_U()
   }
 #endif
 
-#if 0
+#if 1
   printf(" Printing %i nonredundant (column) vectors of U \n",len_d);
   for (int i=0;i<len;i++)
   {
@@ -460,7 +460,7 @@ int ICoord::bmatp_to_U()
 
 int ICoord::bmat_create() 
 {
- // printf(" in bmat_create() \n");
+  printf(" in bmat_create() \n");
  // fflush(stdout);
 
   int len = nbonds+nangles+ntor;
@@ -471,7 +471,7 @@ int ICoord::bmat_create()
   int len_d = nicd0;
 
   //printf(" determining q in delocalized internals \n");
-  //printf(" nicd: %i \n",nicd);
+  printf(" nicd: %i \n",nicd);
   update_ic();
   for (int i=0;i<len_d;i++)
     q[i] = 0.;
@@ -505,7 +505,7 @@ int ICoord::bmat_create()
       torfix[j] = -360.;
     else torfix[j] = 0;
 //    if (abs(tordiff)>180)
-//      printf(" tordiff: %1.1f, effective tor_val: %1.1f ",tordiff,torsion_val(torsions[j][0],torsions[j][1],torsions[j][2],torsions[j][3])+torfix[j]);
+    //  printf(" tordiff: %1.1f, effective tor_val: %1.1f ",tordiff,torsion_val(torsions[j][0],torsions[j][1],torsions[j][2],torsions[j][3])+torfix[j]);
   }
   //printf(" torfix: "); for (int j=0;j<ntor;j++) printf(" %1.1f",torfix[j]); printf("\n");
   for (int i=0;i<len_d;i++)
@@ -542,7 +542,7 @@ int ICoord::bmat_create()
   delete [] q0;
 #endif
 
-  //printf(" now making bmat in delocalized internals (len: %i len_d: %i) \n",len,len_d);
+  printf(" now making bmat in delocalized internals (len: %i len_d: %i) \n",len,len_d);
 #if 1
   mat_times_mat(bmat,Ut,bmatp,len_d,N3,len);
 #else
@@ -583,7 +583,7 @@ int ICoord::bmat_create()
     bbti[i] = bbt[i];
 
   //need to invert bbt, then bbt-1 * bmat = bt-1
- // printf(" before invert bbti \n");
+  printf(" before invert bbti \n");
  // fflush(stdout);
   Invert(bbti,len_d);
 

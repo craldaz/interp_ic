@@ -2,6 +2,17 @@
 #define INTERP_H
 
 
+//standard library includes
+#include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <stdio.h>
+#include <vector>
+#include <unistd.h>
+#include <string>
+#include <cctype>
+#include <ctime>
+#include <sys/stat.h>
 #include "stringtools.h"
 #include "pTable.h"
 #include "icoord.h"
@@ -18,7 +29,11 @@ public:
   int* anumbers;                //array of atomic indices 
   int natoms;
   double** coords;
+  double** allcoords;
   ICoord* icoords;
+  ICoord newic;
+  ICoord intic;
+  ICoord int2ic;
   double* coords0;
   int* coordn;                  //coordination number
   int nimptor;

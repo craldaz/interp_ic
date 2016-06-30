@@ -1,6 +1,5 @@
 #include "icoord.h"
-#include "interp.h"
-
+#include "gstring.h"
 #define MAX_DIST 4.0
 
 int ICoord::distance_matrix_ic(ICoord ic1, ICoord ic2)

@@ -125,16 +125,80 @@ void Interp::calc_interp()
     icoords[i].alloc(natoms);
   icoords[0].reset(natoms,anames,anumbers,coords[0]);
   icoords[2-1].reset(natoms,anames,anumbers,coords[2-1]);
-
+	//cout << "I'm here about to print icoords[0]" << endl; 
+	//icoords[0].print_xyz();
 
   ICoord ic1,ic2,ic3; 
   ic1.alloc(natoms);
   ic2.alloc(natoms);
   ic3.alloc(natoms);
   ic1.reset(natoms,anames,anumbers,coords[0]);
+  ic3.reset(natoms,anames,anumbers,coords[0]);
   ic2.reset(natoms,anames,anumbers,coords[2-1]);
   ic1.ic_create();
   ic2.ic_create();
+	//cout << "I'm here testing copy_ic" << endl; 
+ 	//ic3.copy_ic(ic2); 
+	//cout << "I'm here about to print ic3" << endl; 
+	//ic3.print_ic();	
+	//ic1.print_xyz();
+//	ic1.print_ic();
+	//ic2.print_ic();
+
+  allcoords = new double*[2];
+  for (int i=0;i<2;i++)
+    allcoords[i] = icoords[i].coords;
+
+// create union_ic
+ // newic.alloc(natoms);
+ // intic.alloc(natoms);
+ // int2ic.alloc(natoms);
+ // newic.reset(natoms,anames,anumbers,icoords[0].coords);
+  //intic.reset(natoms,anames,anumbers,icoords[2-1].coords);
+  //int2ic.reset(natoms,anames,anumbers,icoords[2-1].coords);
+	
+	//newic.union_ic(ic1,ic2);  
+  //newic.bmat_alloc();
+  //newic.bmat_create();
+
+
+  //printf("\n actual IC's \n");
+  //newic.print_ic();
+
+
+  //int size_ic = newic.nbonds + newic.nangles + newic.ntor;
+  //int len_d = newic.nicd0;
+
+	ic3.union_ic(ic1,ic2);
+  printf("\n actual IC's \n");
+  ic3.print_ic();
+	ic3.bmat_alloc();
+	ic3.bmatp_create();
+	ic3.bmatp_to_U();
+	ic3.bmat_create();
+	ic3.print_q();
+  printf("\n");
+  for (int n=0;n<2;n++)
+    icoords[n].copy_ic(ic3);
+  for (int n=0;n<2;n++)
+    icoords[n].bmat_alloc();
+
+#if 1
+    icoords[0].bmatp_create();
+    icoords[2-1].bmatp_create();
+    icoords[0].bmatp_to_U();
+    icoords[2-1].bmatp_to_U();
+    icoords[0].bmat_create();
+    icoords[2-1].bmat_create();
+#else
+  for (int n=0;n<2;n++)
+    icoords[n].bmatp_to_U();
+  for (int n=0;n<2;n++)
+    icoords[n].bmat_create();
+#endif
+
+
 }
+
 
 
