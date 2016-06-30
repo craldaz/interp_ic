@@ -125,8 +125,9 @@ void Interp::calc_interp()
     icoords[i].alloc(natoms);
   icoords[0].reset(natoms,anames,anumbers,coords[0]);
   icoords[2-1].reset(natoms,anames,anumbers,coords[2-1]);
-	//cout << "I'm here about to print icoords[0]" << endl; 
-	//icoords[0].print_xyz();
+	cout << "I'm here about to print icoords[0]" << endl; 
+	icoords[0].print_xyz();
+	icoords[1].print_xyz();
 
   ICoord ic1,ic2,ic3; 
   ic1.alloc(natoms);
@@ -176,14 +177,14 @@ void Interp::calc_interp()
 	ic3.bmatp_create();
 	ic3.bmatp_to_U();
 	ic3.bmat_create();
-	ic3.print_q();
+//	ic3.print_q();
   printf("\n");
   for (int n=0;n<2;n++)
     icoords[n].copy_ic(ic3);
   for (int n=0;n<2;n++)
     icoords[n].bmat_alloc();
 
-#if 1
+#if 0
     icoords[0].bmatp_create();
     icoords[2-1].bmatp_create();
     icoords[0].bmatp_to_U();
@@ -191,11 +192,13 @@ void Interp::calc_interp()
     icoords[0].bmat_create();
     icoords[2-1].bmat_create();
 #else
-  for (int n=0;n<2;n++)
+  for (int n=0;n<2;n++){
+		icoords[n].bmatp_create();
     icoords[n].bmatp_to_U();
-  for (int n=0;n<2;n++)
     icoords[n].bmat_create();
+		icoords[n].print_q();}
 #endif
+		
 
 
 }

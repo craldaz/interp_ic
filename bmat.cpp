@@ -329,7 +329,7 @@ int ICoord::bmatp_to_U()
 //  printf(" after diagonalize \n");
 //  fflush(stdout);
 
-#if 1
+#if 0
   printf(" eigenvalues:");
   for (int i=0;i<len;i++)
     printf(" %10.8f",e[i]);
@@ -400,7 +400,7 @@ int ICoord::bmatp_to_U()
   }
 #endif
 
-#if 1
+#if 0
   printf(" Printing %i nonredundant (column) vectors of U \n",len_d);
   for (int i=0;i<len;i++)
   {
@@ -470,8 +470,8 @@ int ICoord::bmat_create()
   
   int len_d = nicd0;
 
-  //printf(" determining q in delocalized internals \n");
-  printf(" nicd: %i \n",nicd);
+  printf(" determining q in delocalized internals \n");
+  //printf(" nicd: %i \n",nicd);
   update_ic();
   for (int i=0;i<len_d;i++)
     q[i] = 0.;
@@ -552,7 +552,6 @@ int ICoord::bmat_create()
   for (int k=0;k<len;k++)
     bmat[i*N3+j] += Ut[i*len+k]*bmatp[k*N3+j];
 #endif
-
 #if 0
   printf(" printing bmat in coordinates U \n");
   for (int i=0;i<len_d;i++)
@@ -583,7 +582,7 @@ int ICoord::bmat_create()
     bbti[i] = bbt[i];
 
   //need to invert bbt, then bbt-1 * bmat = bt-1
-  printf(" before invert bbti \n");
+  //printf(" before invert bbti \n");
  // fflush(stdout);
   Invert(bbti,len_d);
 
