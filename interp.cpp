@@ -116,118 +116,6 @@ void Interp::structure_read(string xyzfile)
   cout << "Finished reading information from structure file" << endl;
 }
 
-
-void Interp::com_rotate_move(int iR, int iP, int iN, double ff) {
- 
- printf(" in com_rotate_move() \n");
-
-  ic3.reset(natoms,anames,anumbers,icoords[iN].coords);
-	int nn=4;
-  double* xyz0 = new double[natoms*3];
-  double* xyz1 = new double[natoms*3];
-  double* xyz2 = new double[natoms*3];
-
-// displace center of mass
-  double mfrac = 0.5;
-  if (2-nn+1!=1)
-    mfrac = 1./(2-nn+1);
-  mfrac *= ff;
-  //printf(" dXYZ frac: %1.2f \n",mfrac);
-
-  for (int i=0;i<3*natoms;i++) xyz0[i] = icoords[iR].coords[i];
-  for (int i=0;i<3*natoms;i++) xyz2[i] = icoords[iP].coords[i];
-  for (int i=0;i<3*natoms;i++) xyz1[i] = 0.;
-  double mx0 = 0.;
-  double my0 = 0.;
-  double mz0 = 0.;
-  double mx2 = 0.;
-  double my2 = 0.;
-  double mz2 = 0.;
-  double mass = 0.;
-
-  //for (int i=0;i<natoms;i++)
-  //  printf(" amasses[%i]: %1.2f \n",i,amasses[i]);
-
-    for (int i=0;i<natoms;i++)
-    {
-      mass += amasses[i];
-      mx0 += amasses[i] * xyz0[3*i];
-      my0 += amasses[i] * xyz0[3*i+1];
-      mz0 += amasses[i] * xyz0[3*i+2];
-    }
-    mx0 = mx0 / mass; my0 = my0 / mass; mz0 = mz0 / mass;
-    for (int i=0;i<natoms;i++)
-    {
-      mx2 += amasses[i] * xyz2[3*i];
-      my2 += amasses[i] * xyz2[3*i+1];
-      mz2 += amasses[i] * xyz2[3*i+2];
-    }
-    mx2 = mx2 / mass; my2 = my2 / mass; mz2 = mz2 / mass;
-
-   // printf(" CoM1: %1.3f %1.3f %1.3f \n",mx0,my0,mz0);
-   // printf(" CoM2: %1.3f %1.3f %1.3f \n",mx2,my2,mz2);
-    double mx1 = mfrac*(mx2-mx0);
-    double my1 = mfrac*(my2-my0);
-    double mz1 = mfrac*(mz2-mz0);
-    for (int i=0;i<natoms;i++)
-    {
-      ic3.coords[3*i] += mx1;
-      ic3.coords[3*i+1] += my1;
-      ic3.coords[3*i+2] += mz1;
-    }
-
- // printf("\n  doing rotation \n");
-  int natomsqm = natoms;
-  double* amassesqm = new double[natomsqm+1];
-  int c = 0;
-  for (int i=0;i<natoms;i++)
-  {
-    xyz1[3*c]   = newic.coords[3*i];
-    xyz1[3*c+1] = newic.coords[3*i+1];
-    xyz1[3*c+2] = newic.coords[3*i+2];
-    xyz2[3*c]   = icoords[iP].coords[3*i];
-    xyz2[3*c+1] = icoords[iP].coords[3*i+1];
-    xyz2[3*c+2] = icoords[iP].coords[3*i+2];
- //   amassesqm[c] = amasses[i];
-    amassesqm[c] = 1.0;
-    c++;
-  }  
- 
-#if 0
-  cout << " " << natoms << endl << endl;
-  for (int i=0;i<natoms;i++)
-    cout << anames[i] << " " << newic.coords[3*i+0] << " "  << newic.coords[3*i+1] << " " << newic.coords[3*i+2] << endl;
-#endif
-
-  Eckart::Eckart_align(xyz2,xyz1,amassesqm,natomsqm,mfrac);
-//  Eckart::Eckart_align(xyz2,xyz1,amassesqm,natomsqm);
- 
-  c = 0;
-  for (int i=0;i<natoms;i++)
-  {
-    ic3.coords[3*i]   = xyz1[3*c];
-    ic3.coords[3*i+1] = xyz1[3*c+1];
-    ic3.coords[3*i+2] = xyz1[3*c+2];
-    c++;
-  }  
-#if 0
-  cout << " " << natoms << endl << endl;
-  for (int i=0;i<natoms;i++)
-    cout << anames[i] << " " << newic.coords[3*i+0] << " "  << newic.coords[3*i+1] << " " << newic.coords[3*i+2] << endl;
-#endif
-
-  delete [] amassesqm;
-
-
-  delete [] xyz0;
-  delete [] xyz1;
-  delete [] xyz2;
-
-  icoords[iN].reset(natoms,anames,anumbers,newic.coords);
-
-  return;
-}
-
 void Interp::calc_interp()
 {
 	cout << "Starting" << endl; 
@@ -246,7 +134,9 @@ void Interp::calc_interp()
   ic3.reset(natoms,anames,anumbers,coords[0]);
   ic2.reset(natoms,anames,anumbers,coords[2-1]);
   ic1.ic_create();
+	ic1.print_ic();
   ic2.ic_create();
+	ic2.print_ic();
 
   allcoords = new double*[2];
   for (int i=0;i<2;i++)
@@ -280,6 +170,8 @@ void Interp::calc_interp()
  	double* ictan = new double[size_ic+100]; 
   double* ictan0 = new double[size_ic];
 #endif
+
+
 #if 0
 // create union_ic
   newic.alloc(natoms);
@@ -315,23 +207,24 @@ void Interp::calc_interp()
  		ictan[i] = new double[size_ic+100];
 #endif
 
-#if 0 
+#if 0
 cout << "About to interpolate to halfway pt." << endl; 
 	//double* qhalf = new double[len_d];  
 	ic4.alloc(natoms);
 	ic4.bmat_alloc();
+  int len_d = ic3.nicd0;
 	for (int i=0;i<len_d;i++)
 		{ 
 		ic3.q[i] = 0.5*icoords[0].q[i] + 0.5*icoords[1].q[i]; 
 	  cout << ic3.q[i] << " " ; 
 		}
-	ic3.update_ic();	
+	//ic3.update_ic();	
 	ic3.ic_to_xyz();
 	ic3.print_xyz();
 	cout << "\n done" << endl; 
 #endif	
 	
-
+#if 1
   int nbonds = ic3.nbonds;
   int nangles = ic3.nangles;
   int ntor = ic3.ntor;
@@ -377,11 +270,14 @@ cout << "About to interpolate to halfway pt." << endl;
 
     printf(" dqmag: %1.2f",dqmag);
 
+  	for (int i=0;i<len_d;i++) ic3.dq0[i] = 0.;
+
     ic3.dq0[ic3.nicd0-1] = -dqmag/2;
     printf(" dq0[constraint]: %1.2f \n",ic3.dq0[ic3.nicd0-1]);
 		
-		com_rotate_move(1,0,1,1.0);
     int success = ic3.ic_to_xyz();
+		ic3.print_xyz();
+	
+#endif
   return;
 }
-
