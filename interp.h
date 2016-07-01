@@ -16,6 +16,7 @@
 #include "stringtools.h"
 #include "pTable.h"
 #include "icoord.h"
+#include "eckart.h"
 
 class Interp { 
 
@@ -23,6 +24,7 @@ public:
 	int init(string xyzfile); 
 	void structure_read(string xyzfile); 
 	void calc_interp();
+	void com_rotate_move(int iR, int iP, int iN, double ff);
  	double* amasses; 
 	double* amasses3; 
 	string* anames;               //array of atomic symbols 

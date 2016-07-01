@@ -1686,6 +1686,7 @@ void ICoord::make_Hint()
 
 void ICoord::opt_constraint(double* C) 
 {
+	printf("In opt_constraint\n"); 
   int len = nbonds+nangles+ntor;
 
 #if 0
@@ -4342,7 +4343,7 @@ int ICoord::ic_to_xyz() {
     if (mag<0.00005) break;
   }
 
-#if 0
+#if 1
   for (int i=0;i<natoms;i++)
     printf(" dX: %1.3f %1.3f %1.3f \n",xyzd[3*i+0],xyzd[3*i+1],xyzd[3*i+2]);
   printf("\n");
